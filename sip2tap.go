@@ -2,7 +2,7 @@ package main
 
 import (
 	"gopkg.in/natefinch/lumberjack.v2" //rotational logging
-	"fmt"
+	//"fmt"
 	"log"
 	"net"
 	"regexp"

@@ -9,7 +9,7 @@ import (
 	"github.com/ClinicalSystemsEngineering/tap"
 	//"strconv"
 	"io"
-	"sip2tap/sipparser"
+	"github.com/ClinicalSystemsEngineering/sip2tap/sipparser"
 	"strings"
 	//"time"
 	"flag"

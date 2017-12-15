@@ -1,11 +1,12 @@
 package main
 
 import (
+	"gopkg.in/natefinch/lumberjack.v2" //rotational logging
 	"fmt"
 	"log"
 	"net"
 	"regexp"
-	"tap"
+	"github.com/ClinicalSystemsEngineering/tap"
 	//"strconv"
 	"io"
 	"sip2tap/sipparser"
@@ -41,7 +42,7 @@ TryReadingAgain:
 		return
 	case bytesread == 0:
 		if trycntr < 3 {
-			log.Println("Zero bytes read in message trying again")
+			log.Println("Zero bytes read in message trying again.")
 			trycntr++
 			goto TryReadingAgain
 		} else {
@@ -106,7 +107,13 @@ func main() {
 	sipPort := flag.String("sipPort","5080","SIP listener port on local host")
 	tapPort := flag.String("tapPort","10001","TAP listener port on local host")
 	flag.Parse()
-	
+	log.SetOutput(&lumberjack.Logger{
+		Filename:   "/var/log/sip2tap/sip2tap.log",
+		MaxSize:    100, // megabytes
+		MaxBackups: 5,
+		MaxAge:     60,   //days
+		Compress:   true, // disabled by default
+	})
 	
 	log.Printf("STARTING SIP Listener on port udp %v...\n\n",*sipPort)
 	// Listen on udp port 5080 on all available unicast and
@@ -115,7 +122,7 @@ func main() {
 
 	sip, err := net.ListenUDP("udp", addr)
 	if err != nil {
-		fmt.Println("Error opening sip listener, check log for details")
+		log.Println("Error opening sip listener failing application.")
 		log.Fatal(err)
 	}
 	defer sip.Close()
